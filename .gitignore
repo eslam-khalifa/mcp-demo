@@ -1,0 +1,202 @@
+# =============================================================================
+# .NET
+# =============================================================================
+
+## Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Oo]ut/
+[Ll]og/
+[Ll]ogs/
+
+## NuGet
+*.nupkg
+*.snupkg
+**/[Pp]ackages/*
+!**/[Pp]ackages/build/
+*.nuget.props
+*.nuget.targets
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+## Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.dbmdl
+*.dbproj.schemaview
+*.jfm
+*.pfx
+*.publishsettings
+
+## Visual Studio Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+## Rider
+.idea/
+*.sln.iml
+
+## MSTest
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+TestResult.xml
+
+## Coverage
+*.coverage
+*.coveragexml
+coverage*.json
+coverage*.xml
+lcov.info
+
+## NCrunch
+_NCrunch_*
+.*crunch*.local.xml
+nCrunchTemp_*
+
+## StyleCop
+StyleCopReport.xml
+
+## Publish profiles
+*.azurePubxml
+*.pubxml
+!**/[Pp]ublish[Pp]rofiles/*.pubxml
+
+## Misc .NET
+*.pidb
+*.svclog
+*.scc
+csx/
+*.build.csdef
+ecf/
+rcf/
+AppPackages/
+BundleArtifacts/
+Package.StoreAssociation.xml
+_pkginfo.txt
+*.appx
+*.appxbundle
+*.appxupload
+
+## dotnet tool
+.dotnet/
+
+# =============================================================================
+# Python (sandbox tools)
+# =============================================================================
+
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+*.egg
+dist/
+build/
+.eggs/
+*.whl
+
+## Virtual environments
+.env
+.venv
+env/
+venv/
+ENV/
+
+## Jupyter (just in case)
+.ipynb_checkpoints/
+
+## pytest / coverage
+.pytest_cache/
+htmlcov/
+.tox/
+.nox/
+
+# =============================================================================
+# Docker
+# =============================================================================
+
+# Don't ignore Dockerfile or docker-compose — they are source code
+# But ignore runtime artifacts
+docker/python-sandbox/__pycache__/
+docker/python-sandbox/*.pyc
+
+# =============================================================================
+# OS-generated files
+# =============================================================================
+
+## Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+[Dd]esktop.ini
+$RECYCLE.BIN/
+
+## macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+## Linux
+*~
+.directory
+
+# =============================================================================
+# Logs (generated at runtime)
+# =============================================================================
+
+logs/
+*.log
+
+# =============================================================================
+# Secrets & environment files
+# =============================================================================
+
+appsettings.*.json
+!appsettings.json
+!appsettings.Development.json
+*.env
+*.env.*
+!*.env.example
+
+# =============================================================================
+# Cursor / MCP
+# =============================================================================
+
+.cursor/
+.mcp-logs/
+
+# =============================================================================
+# Misc
+# =============================================================================
+
+*.tmp
+*.temp
+*.bak
+*.swp
+*.orig
+node_modules/
