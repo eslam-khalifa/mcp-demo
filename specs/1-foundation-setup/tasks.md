@@ -26,8 +26,8 @@ implementation and testing of each story.
 
 **Purpose**: Create the solution file and global build configuration.
 
-- [ ] T001 Create solution file `MCPDemo.sln` at repository root
-- [ ] T002 Create `Directory.Build.props` at repository root with global settings: `TargetFramework=net8.0`, `Nullable=enable`, `TreatWarningsAsErrors=true`, `ImplicitUsings=enable`
+- [x] T001 Create solution file `MCPDemo.sln` at repository root
+- [x] T002 Create `Directory.Build.props` at repository root with global settings: `TargetFramework=net8.0`, `Nullable=enable`, `TreatWarningsAsErrors=true`, `ImplicitUsings=enable`
 
 ---
 
@@ -39,18 +39,18 @@ implementation and testing of each story.
 
 ### Source Projects
 
-- [ ] T003 Create `src/MCPDemo.Domain/MCPDemo.Domain.csproj` as classlib with zero project references and add to solution
-- [ ] T004 [P] Create `src/MCPDemo.Shared/MCPDemo.Shared.csproj` as classlib with zero project references and add to solution
-- [ ] T005 Create `src/MCPDemo.Application/MCPDemo.Application.csproj` as classlib with project reference to MCPDemo.Domain and add to solution (depends on T003)
-- [ ] T006 Create `src/MCPDemo.Infrastructure/MCPDemo.Infrastructure.csproj` as classlib with project references to MCPDemo.Domain and MCPDemo.Shared, and add to solution (depends on T003, T004)
-- [ ] T007 Create `src/MCPDemo.Api/MCPDemo.Api.csproj` as console app with project references to MCPDemo.Application, MCPDemo.Infrastructure, and MCPDemo.Shared, and add to solution (depends on T004, T005, T006)
-- [ ] T008 Create minimal `src/MCPDemo.Api/Program.cs` placeholder that compiles (empty Main or top-level statements)
+- [x] T003 Create `src/MCPDemo.Domain/MCPDemo.Domain.csproj` as classlib with zero project references and add to solution
+- [x] T004 [P] Create `src/MCPDemo.Shared/MCPDemo.Shared.csproj` as classlib with zero project references and add to solution
+- [x] T005 Create `src/MCPDemo.Application/MCPDemo.Application.csproj` as classlib with project reference to MCPDemo.Domain and add to solution (depends on T003)
+- [x] T006 Create `src/MCPDemo.Infrastructure/MCPDemo.Infrastructure.csproj` as classlib with project references to MCPDemo.Domain and MCPDemo.Shared, and add to solution (depends on T003, T004)
+- [x] T007 Create `src/MCPDemo.Api/MCPDemo.Api.csproj` as console app with project references to MCPDemo.Application, MCPDemo.Infrastructure, and MCPDemo.Shared, and add to solution (depends on T004, T005, T006)
+- [x] T008 Create minimal `src/MCPDemo.Api/Program.cs` placeholder that compiles (empty Main or top-level statements)
 
 ### Test Projects
 
-- [ ] T009 [P] Create `tests/MCPDemo.Application.Tests/MCPDemo.Application.Tests.csproj` with references to MCPDemo.Application and MCPDemo.Domain, add xUnit SDK references, and add to solution
-- [ ] T010 [P] Create `tests/MCPDemo.Infrastructure.Tests/MCPDemo.Infrastructure.Tests.csproj` with references to MCPDemo.Infrastructure, MCPDemo.Domain, and MCPDemo.Shared, add xUnit SDK references, and add to solution
-- [ ] T011 [P] Create `tests/MCPDemo.Integration.Tests/MCPDemo.Integration.Tests.csproj` with references to MCPDemo.Api, MCPDemo.Application, MCPDemo.Infrastructure, and MCPDemo.Shared, add xUnit SDK references, and add to solution
+- [x] T009 [P] Create `tests/MCPDemo.Application.Tests/MCPDemo.Application.Tests.csproj` with references to MCPDemo.Application and MCPDemo.Domain, add xUnit SDK references, and add to solution
+- [x] T010 [P] Create `tests/MCPDemo.Infrastructure.Tests/MCPDemo.Infrastructure.Tests.csproj` with references to MCPDemo.Infrastructure, MCPDemo.Domain, and MCPDemo.Shared, add xUnit SDK references, and add to solution
+- [x] T011 [P] Create `tests/MCPDemo.Integration.Tests/MCPDemo.Integration.Tests.csproj` with references to MCPDemo.Api, MCPDemo.Application, MCPDemo.Infrastructure, and MCPDemo.Shared, add xUnit SDK references, and add to solution
 
 **Checkpoint**: Solution builds with zero errors and zero warnings. All 8 projects compile. User Story 1 (P1) acceptance criteria met.
 
@@ -64,11 +64,11 @@ implementation and testing of each story.
 
 ### Implementation for User Story 2
 
-- [ ] T012 [P] [US2] Create Product entity in `src/MCPDemo.Domain/Entities/Product.cs` with attributes: Id (int), Title (string), Slug (string), Price (decimal), Description (string), Category (Category), Images (List<string>), CreationAt (DateTime), UpdatedAt (DateTime)
-- [ ] T013 [P] [US2] Create Category entity in `src/MCPDemo.Domain/Entities/Category.cs` with attributes: Id (int), Name (string), Slug (string), Image (string), CreationAt (DateTime), UpdatedAt (DateTime)
-- [ ] T014 [P] [US2] Create PriceRange value object as immutable record in `src/MCPDemo.Domain/ValueObjects/PriceRange.cs` with Min (decimal), Max (decimal), and IsValid() method that returns false if Min < 0 or Max < Min
-- [ ] T015 [P] [US2] Create DomainException base class in `src/MCPDemo.Domain/Exceptions/DomainException.cs` inheriting from System.Exception with message constructor
-- [ ] T016 [P] [US2] Create EntityNotFoundException in `src/MCPDemo.Domain/Exceptions/EntityNotFoundException.cs` inheriting from DomainException with EntityType (string) and EntityId (string) properties
+- [x] T012 [P] [US2] Create Product entity in `src/MCPDemo.Domain/Entities/Product.cs` with attributes: Id (int), Title (string), Slug (string), Price (decimal), Description (string), Category (Category), Images (List<string>), CreationAt (DateTime), UpdatedAt (DateTime)
+- [x] T013 [P] [US2] Create Category entity in `src/MCPDemo.Domain/Entities/Category.cs` with attributes: Id (int), Name (string), Slug (string), Image (string), CreationAt (DateTime), UpdatedAt (DateTime)
+- [x] T014 [P] [US2] Create PriceRange value object as immutable record in `src/MCPDemo.Domain/ValueObjects/PriceRange.cs` with Min (decimal), Max (decimal), and IsValid() method that returns false if Min < 0 or Max < Min
+- [x] T015 [P] [US2] Create DomainException base class in `src/MCPDemo.Domain/Exceptions/DomainException.cs` inheriting from System.Exception with message constructor
+- [x] T016 [P] [US2] Create EntityNotFoundException in `src/MCPDemo.Domain/Exceptions/EntityNotFoundException.cs` inheriting from DomainException with EntityType (string) and EntityId (string) properties
 
 **Checkpoint**: All domain entities compile. PriceRange.IsValid() returns correct results for valid/invalid ranges. Domain project still has zero external references.
 
@@ -82,12 +82,12 @@ implementation and testing of each story.
 
 ### Implementation for User Story 3
 
-- [ ] T017 [P] [US3] Create generic Result<T> wrapper in `src/MCPDemo.Shared/Models/Result.cs` with: IsSuccess (bool), IsFailure (bool), Value (T — throws InvalidOperationException on failure), Error (string), static Success(T value) factory that throws ArgumentNullException if value is null, and static Failure(string error) factory
-- [ ] T018 [P] [US3] Create ErrorResponse model in `src/MCPDemo.Shared/Models/ErrorResponse.cs` with: ErrorType (string), Message (string), ToolName (string?), Timestamp (DateTime)
-- [ ] T019 [P] [US3] Create ApiConstants in `src/MCPDemo.Shared/Constants/ApiConstants.cs` with: BaseUrl = "https://api.escuelajs.co/api/v1", ProductsEndpoint = "products", CategoriesEndpoint = "categories"
-- [ ] T020 [P] [US3] Create McpToolException in `src/MCPDemo.Shared/Exceptions/McpToolException.cs` inheriting from System.Exception with ToolName (string) and ErrorType (string) properties
-- [ ] T021 [P] [US3] Create ExternalApiException in `src/MCPDemo.Shared/Exceptions/ExternalApiException.cs` inheriting from System.Exception with StatusCode (int) and ResponseBody (string) properties
-- [ ] T022 [P] [US3] Create StringExtensions in `src/MCPDemo.Shared/Extensions/StringExtensions.cs` with basic utility methods (e.g., ToSlug(), IsNullOrWhitespace() guard)
+- [x] T017 [P] [US3] Create generic Result<T> wrapper in `src/MCPDemo.Shared/Models/Result.cs` with: IsSuccess (bool), IsFailure (bool), Value (T — throws InvalidOperationException on failure), Error (string), static Success(T value) factory that throws ArgumentNullException if value is null, and static Failure(string error) factory
+- [x] T018 [P] [US3] Create ErrorResponse model in `src/MCPDemo.Shared/Models/ErrorResponse.cs` with: ErrorType (string), Message (string), ToolName (string?), Timestamp (DateTime)
+- [x] T019 [P] [US3] Create ApiConstants in `src/MCPDemo.Shared/Constants/ApiConstants.cs` with: BaseUrl = "https://api.escuelajs.co/api/v1", ProductsEndpoint = "products", CategoriesEndpoint = "categories"
+- [x] T020 [P] [US3] Create McpToolException in `src/MCPDemo.Shared/Exceptions/McpToolException.cs` inheriting from System.Exception with ToolName (string) and ErrorType (string) properties
+- [x] T021 [P] [US3] Create ExternalApiException in `src/MCPDemo.Shared/Exceptions/ExternalApiException.cs` inheriting from System.Exception with StatusCode (int) and ResponseBody (string) properties
+- [x] T022 [P] [US3] Create StringExtensions in `src/MCPDemo.Shared/Extensions/StringExtensions.cs` with basic utility methods (e.g., ToSlug(), IsNullOrWhitespace() guard)
 
 **Checkpoint**: All shared models compile. Result<T>.Success(value) works; Result<T>.Success(null) throws ArgumentNullException. Shared project still has zero project references.
 
@@ -101,20 +101,20 @@ implementation and testing of each story.
 
 ### DTOs for User Story 4
 
-- [ ] T023 [P] [US4] Create CreateProductDto in `src/MCPDemo.Application/DTOs/Products/CreateProductDto.cs` with: Title (string), Price (decimal), Description (string), CategoryId (int), Images (List<string>)
-- [ ] T024 [P] [US4] Create UpdateProductDto in `src/MCPDemo.Application/DTOs/Products/UpdateProductDto.cs` with: Title (string?), Price (decimal?), Description (string?), CategoryId (int?), Images (List<string>?)
-- [ ] T025 [P] [US4] Create CreateCategoryDto in `src/MCPDemo.Application/DTOs/Categories/CreateCategoryDto.cs` with: Name (string), Image (string)
-- [ ] T026 [P] [US4] Create UpdateCategoryDto in `src/MCPDemo.Application/DTOs/Categories/UpdateCategoryDto.cs` with: Name (string?), Image (string?)
-- [ ] T027 [P] [US4] Create SearchProductsDto in `src/MCPDemo.Application/DTOs/SearchProductsDto.cs` with: Title (string?), Price (decimal?), PriceMin (decimal?), PriceMax (decimal?), CategoryId (int?), CategorySlug (string?), Offset (int?), Limit (int?)
-- [ ] T028 [P] [US4] Create analytics response DTOs in `src/MCPDemo.Application/DTOs/Analytics/`: PriceStatisticsDto (Min, Max, Mean, Median, StdDev, Count), TopExpensiveDto (Products list, AveragePrice), CategoryReportDto (CategoryId, CategoryName, AveragePrice, MinPrice, MaxPrice, ProductCount), PriceDistributionDto (Buckets list with RangeMin, RangeMax, Count)
+- [x] T023 [P] [US4] Create CreateProductDto in `src/MCPDemo.Application/DTOs/Products/CreateProductDto.cs` with: Title (string), Price (decimal), Description (string), CategoryId (int), Images (List<string>)
+- [x] T024 [P] [US4] Create UpdateProductDto in `src/MCPDemo.Application/DTOs/Products/UpdateProductDto.cs` with: Title (string?), Price (decimal?), Description (string?), CategoryId (int?), Images (List<string>?)
+- [x] T025 [P] [US4] Create CreateCategoryDto in `src/MCPDemo.Application/DTOs/Categories/CreateCategoryDto.cs` with: Name (string), Image (string)
+- [x] T026 [P] [US4] Create UpdateCategoryDto in `src/MCPDemo.Application/DTOs/Categories/UpdateCategoryDto.cs` with: Name (string?), Image (string?)
+- [x] T027 [P] [US4] Create SearchProductsDto in `src/MCPDemo.Application/DTOs/SearchProductsDto.cs` with: Title (string?), Price (decimal?), PriceMin (decimal?), PriceMax (decimal?), CategoryId (int?), CategorySlug (string?), Offset (int?), Limit (int?)
+- [x] T028 [P] [US4] Create analytics response DTOs in `src/MCPDemo.Application/DTOs/Analytics/`: PriceStatisticsDto (Min, Max, Mean, Median, StdDev, Count), TopExpensiveDto (Products list, AveragePrice), CategoryReportDto (CategoryId, CategoryName, AveragePrice, MinPrice, MaxPrice, ProductCount), PriceDistributionDto (Buckets list with RangeMin, RangeMax, Count)
 
 ### Service Interfaces for User Story 4
 
-- [ ] T029 [P] [US4] Create IProductService in `src/MCPDemo.Application/Interfaces/IProductService.cs` with 8 methods: GetAllAsync, GetByIdAsync, GetBySlugAsync, CreateAsync, UpdateAsync, DeleteAsync, GetRelatedByIdAsync, GetRelatedBySlugAsync — all returning Task<Result<T>> (depends on T012, T017, T023, T024)
-- [ ] T030 [P] [US4] Create ICategoryService in `src/MCPDemo.Application/Interfaces/ICategoryService.cs` with 7 methods: GetAllAsync, GetByIdAsync, GetBySlugAsync, CreateAsync, UpdateAsync, DeleteAsync, GetProductsAsync — all returning Task<Result<T>> (depends on T013, T017, T025, T026)
-- [ ] T031 [P] [US4] Create ISearchService in `src/MCPDemo.Application/Interfaces/ISearchService.cs` with 1 method: SearchProductsAsync(SearchProductsDto) returning Task<Result<IEnumerable<Product>>> (depends on T012, T017, T027)
-- [ ] T032 [P] [US4] Create IAnalyticsService in `src/MCPDemo.Application/Interfaces/IAnalyticsService.cs` with 4 methods: GetPriceStatisticsAsync, GetTopExpensiveProductsAsync, GetCategoryPriceReportAsync, GetPriceDistributionAsync — all returning Task<Result<T>> (depends on T017, T028)
-- [ ] T033 [P] [US4] Create IPythonSandboxService in `src/MCPDemo.Application/Interfaces/IPythonSandboxService.cs` with 1 method: ExecuteAsync(string toolName, string jsonInput) returning Task<Result<string>> (depends on T017)
+- [x] T029 [P] [US4] Create IProductService in `src/MCPDemo.Application/Interfaces/IProductService.cs` with 8 methods: GetAllAsync, GetByIdAsync, GetBySlugAsync, CreateAsync, UpdateAsync, DeleteAsync, GetRelatedByIdAsync, GetRelatedBySlugAsync — all returning Task<Result<T>> (depends on T012, T017, T023, T024)
+- [x] T030 [P] [US4] Create ICategoryService in `src/MCPDemo.Application/Interfaces/ICategoryService.cs` with 7 methods: GetAllAsync, GetByIdAsync, GetBySlugAsync, CreateAsync, UpdateAsync, DeleteAsync, GetProductsAsync — all returning Task<Result<T>> (depends on T013, T017, T025, T026)
+- [x] T031 [P] [US4] Create ISearchService in `src/MCPDemo.Application/Interfaces/ISearchService.cs` with 1 method: SearchProductsAsync(SearchProductsDto) returning Task<Result<IEnumerable<Product>>> (depends on T012, T017, T027)
+- [x] T032 [P] [US4] Create IAnalyticsService in `src/MCPDemo.Application/Interfaces/IAnalyticsService.cs` with 4 methods: GetPriceStatisticsAsync, GetTopExpensiveProductsAsync, GetCategoryPriceReportAsync, GetPriceDistributionAsync — all returning Task<Result<T>> (depends on T017, T028)
+- [x] T033 [P] [US4] Create IPythonSandboxService in `src/MCPDemo.Application/Interfaces/IPythonSandboxService.cs` with 1 method: ExecuteAsync(string toolName, string jsonInput) returning Task<Result<string>> (depends on T017)
 
 **Checkpoint**: All interfaces and DTOs compile. Application project references only Domain. Any interface can be mock-implemented (stub class) without errors.
 
@@ -124,10 +124,10 @@ implementation and testing of each story.
 
 **Purpose**: Final verification and cleanup.
 
-- [ ] T034 Verify full solution build: run `dotnet build MCPDemo.sln` and confirm zero errors and zero warnings with warnings-as-errors and nullable analysis enabled
-- [ ] T035 [P] Verify project dependency graph matches documented architecture in plan.md — confirm Domain has zero refs, Shared has zero refs, Application refs Domain only, Infrastructure refs Domain + Shared, Api refs Application + Infrastructure + Shared
-- [ ] T036 [P] Run quickstart.md smoke test validation: build succeeds, entities instantiable, PriceRange validation works, Result<T> enforces non-null, interfaces mockable
-- [ ] T037 [P] Add XML documentation comments to all public types and interface methods for IntelliSense support
+- [x] T034 Verify full solution build: run `dotnet build MCPDemo.sln` and confirm zero errors and zero warnings with warnings-as-errors and nullable analysis enabled
+- [x] T035 [P] Verify project dependency graph matches documented architecture in plan.md — confirm Domain has zero refs, Shared has zero refs, Application refs Domain only, Infrastructure refs Domain + Shared, Api refs Application + Infrastructure + Shared
+- [x] T036 [P] Run quickstart.md smoke test validation: build succeeds, entities instantiable, PriceRange validation works, Result<T> enforces non-null, interfaces mockable
+- [x] T037 [P] Add XML documentation comments to all public types and interface methods for IntelliSense support
 
 ---
 

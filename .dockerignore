@@ -1,0 +1,28 @@
+# Ignore git and IDE metadata
+.git
+.gitignore
+.vscode
+.idea
+.vs
+
+# Ignore build artifacts
+**/bin/
+**/obj/
+**/out/
+
+# Ignore Python artifacts
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+**/*.pyd
+**/.pytest_cache/
+**/.venv/
+**/venv/
+
+# Ignore Docker metadata
+Dockerfile
+docker-compose.yml
+
+# Ignore logs
+**/logs/
+*.log
