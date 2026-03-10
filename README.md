@@ -14,15 +14,17 @@ This project is a demonstration of an MCP (Model Context Protocol) server built 
 
 ## Current Progress
 
-### Phase 1: Solution Setup ✅
-- [x] Multi-project architecture (.NET 8).
-- [x] Shared patterns and base entities.
+### Phase 3: Infrastructure & Sandbox ✅
+- [x] Docker-based Python sandbox with strict security.
+- [x] In-memory thread-safe metrics collector.
+- [x] Integration with Platzi Store API.
 
-### Phase 2: Core Services & Infrastructure ✅
-- [x] Robust API Client with retries.
-- [x] Product, Category, and Search services.
-- [x] Structured logging and runtime metrics.
+### Phase 4: Testing & Quality Assurance ✅
+- [x] Comprehensive Unit Test suite (Application & Infrastructure).
+- [x] Integration Tests for live API and Docker sandbox.
+- [x] Fixed Critical Bugs: Pagination error in API, improved error capture in Sandbox.
 
 ## Next Steps
-- **Phase 3**: Tool Definitions & Handlers (MCP protocol integration).
-- **Phase 4**: Security & Rate Limiting.
+- **Phase 5**: Tool Definitions & Handlers (MCP protocol integration).
+- **Phase 6**: Security & Rate Limiting.
+

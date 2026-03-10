@@ -56,15 +56,13 @@ public class PythonSandboxService : IPythonSandboxService
 
             if (result.ExitCode != 0)
             {
-                var errorMessage = !string.IsNullOrWhiteSpace(result.StandardError) 
-                    ? result.StandardError 
-                    : result.StandardOutput; // main.py might print error to stdout before exiting
-
-                _logger.LogError("Python sandbox execution failed with exit code {ExitCode}. Error: {Error}", 
-                    result.ExitCode, errorMessage);
+                var combinedOutput = $"Stdout: {result.StandardOutput}\nStderr: {result.StandardError}";
+                
+                _logger.LogError("Python sandbox execution failed with exit code {ExitCode}. Output: {Output}", 
+                    result.ExitCode, combinedOutput);
                 
                 _metrics.RecordExecution("__PythonSandbox__", sw.ElapsedMilliseconds, false, "ExecutionError");
-                throw new PythonSandboxException($"Python execution failed (Code {result.ExitCode}): {errorMessage}");
+                throw new PythonSandboxException($"Python execution failed (Code {result.ExitCode}): {combinedOutput}");
             }
 
             _metrics.RecordExecution("__PythonSandbox__", sw.ElapsedMilliseconds, true);

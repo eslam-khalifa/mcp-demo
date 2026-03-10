@@ -1,90 +1,104 @@
-# Implementation Plan: Python Sandbox & Custom Code Execution
+# Implementation Plan: [FEATURE]
 
-**Branch**: `4-python-sandbox` | **Date**: 2026-03-10 | **Spec**: [spec.md](spec.md)
-**Input**: Feature specification from `specs/4-python-sandbox/spec.md`
+**Branch**: `[###-feature-name]` | **Date**: [DATE] | **Spec**: [link]
+**Input**: Feature specification from `/specs/[###-feature-name]/spec.md`
+
+**Note**: This template is filled in by the `/speckit.plan` command. See `.specify/templates/plan-template.md` for the execution workflow.
 
 ## Summary
 
-Implement a general-purpose `run_python_code` MCP tool that accepts AI-generated Python code and a JSON data payload, executes the code inside a secure Docker sandbox (`python:3.11-slim`), and returns the script's stdout output. The sandbox is hardened with no network access, a read-only filesystem, 256 MB memory cap, 0.5 CPU cap, and a 30-second timeout. This enables the AI assistant to answer any ad-hoc analytical question about store data by writing and executing custom Python scripts at runtime.
+[Extract from feature spec: primary requirement + technical approach from research]
 
 ## Technical Context
 
-**Language/Version**: C# 12 / .NET 8 (MCP tool + infrastructure service), Python 3.11 (sandbox runtime)  
-**Primary Dependencies**: `ModelContextProtocol` NuGet (MCP SDK), `System.Diagnostics.Process` (Docker CLI invocation), `pandas` 2.2.0, `numpy` 1.26.3 (Python sandbox)  
-**Storage**: N/A — stateless execution, no persistence  
-**Testing**: xUnit, NSubstitute, FluentAssertions (C# side); manual Docker integration tests  
-**Target Platform**: Windows/Linux host with Docker installed  
-**Project Type**: MCP server tool (extension to existing `MCPDemo.Api` project)  
-**Performance Goals**: Typical analytics (sort/filter/aggregate on ≤1,000 products) complete within 30 seconds  
-**Constraints**: 256 MB memory, 0.5 CPU, 30s timeout, no network, read-only filesystem, restricted Python builtins  
-**Scale/Scope**: Single tool addition to existing 16-tool MCP server; 1 Dockerfile, 1 Python entry point, 1 C# interface, 1 C# service, 1 MCP tool class
+<!--
+  ACTION REQUIRED: Replace the content in this section with the technical details
+  for the project. The structure here is presented in advisory capacity to guide
+  the iteration process.
+-->
+
+**Language/Version**: [e.g., Python 3.11, Swift 5.9, Rust 1.75 or NEEDS CLARIFICATION]  
+**Primary Dependencies**: [e.g., FastAPI, UIKit, LLVM or NEEDS CLARIFICATION]  
+**Storage**: [if applicable, e.g., PostgreSQL, CoreData, files or N/A]  
+**Testing**: [e.g., pytest, XCTest, cargo test or NEEDS CLARIFICATION]  
+**Target Platform**: [e.g., Linux server, iOS 15+, WASM or NEEDS CLARIFICATION]
+**Project Type**: [e.g., library/cli/web-service/mobile-app/compiler/desktop-app or NEEDS CLARIFICATION]  
+**Performance Goals**: [domain-specific, e.g., 1000 req/s, 10k lines/sec, 60 fps or NEEDS CLARIFICATION]  
+**Constraints**: [domain-specific, e.g., <200ms p95, <100MB memory, offline-capable or NEEDS CLARIFICATION]  
+**Scale/Scope**: [domain-specific, e.g., 10k users, 1M LOC, 50 screens or NEEDS CLARIFICATION]
 
 ## Constitution Check
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-| Principle | Status | Notes |
-|-----------|--------|-------|
-| **I. MCP Tool Standards** | ✅ PASS | `run_python_code` has name, description, typed inputs (`code`, `data`), typed output (string), category (Analytics), implementation type (Python via C# wrapper) |
-| **II. API Calling & Efficiency** | ✅ PASS | The sandbox tool does not call the Platzi API directly. Data is fetched by existing C# tools before being passed to `run_python_code`. |
-| **III. Logging & Metrics** | ✅ PASS | Each `run_python_code` invocation will be logged (timestamp, tool name, execution time, success/failure) and counted in the metrics collector (including Python sandbox execution counter). |
-| **IV. Clean Architecture** | ✅ PASS | `IPythonSandboxService` interface in Application layer; `PythonSandboxService` implementation in Infrastructure layer; `PythonTools.cs` MCP tool in Api layer. Dependencies flow inward. |
-| **V. Security & Sandboxing** | ✅ PASS | Docker with `--network=none`, `--read-only`, `--memory=256m`, `--cpus=0.5`, `--security-opt=no-new-privileges`. Python builtins restricted. 30s timeout enforced by C# `CancellationTokenSource`. |
-| **Technology Stack** | ✅ PASS | .NET 8, C#, Python 3.11 in `python:3.11-slim`, structured file logging via Serilog. |
-| **Spec-Kit Conventions** | ✅ PASS | Tool spec follows spec-kit format. |
-
-**Gate Result**: ✅ All gates pass. Proceeding to Phase 0.
+[Gates determined based on constitution file]
 
 ## Project Structure
 
 ### Documentation (this feature)
 
 ```text
-specs/4-python-sandbox/
-├── plan.md              # This file
-├── research.md          # Phase 0 output
-├── data-model.md        # Phase 1 output
-├── quickstart.md        # Phase 1 output
-├── contracts/           # Phase 1 output
-│   └── run-python-code-tool.md
-└── tasks.md             # Phase 2 output (/speckit.tasks)
+specs/[###-feature]/
+├── plan.md              # This file (/speckit.plan command output)
+├── research.md          # Phase 0 output (/speckit.plan command)
+├── data-model.md        # Phase 1 output (/speckit.plan command)
+├── quickstart.md        # Phase 1 output (/speckit.plan command)
+├── contracts/           # Phase 1 output (/speckit.plan command)
+└── tasks.md             # Phase 2 output (/speckit.tasks command - NOT created by /speckit.plan)
 ```
 
 ### Source Code (repository root)
+<!--
+  ACTION REQUIRED: Replace the placeholder tree below with the concrete layout
+  for this feature. Delete unused options and expand the chosen structure with
+  real paths (e.g., apps/admin, packages/something). The delivered plan must
+  not include Option labels.
+-->
 
 ```text
+# [REMOVE IF UNUSED] Option 1: Single project (DEFAULT)
 src/
-├── MCPDemo.Api/
-│   ├── Program.cs                          # Add IPythonSandboxService DI registration
-│   └── McpTools/
-│       └── PythonTools.cs                  # NEW — run_python_code MCP tool
-│
-├── MCPDemo.Application/
-│   └── Interfaces/
-│       └── IPythonSandboxService.cs        # NEW — sandbox execution interface
-│
-└── MCPDemo.Infrastructure/
-    └── PythonSandbox/
-        ├── PythonSandboxService.cs         # NEW — Docker CLI invocation
-        └── DockerProcessRunner.cs          # NEW — Process abstraction for testability
-
-docker/
-└── python-sandbox/
-    ├── Dockerfile                          # NEW — python:3.11-slim + pandas + numpy
-    ├── requirements.txt                    # NEW — pandas, numpy
-    └── main.py                             # NEW — general-purpose code executor
+├── models/
+├── services/
+├── cli/
+└── lib/
 
 tests/
-├── MCPDemo.Infrastructure.Tests/
-│   └── PythonSandbox/
-│       └── PythonSandboxServiceTests.cs    # NEW — unit tests with mocked Process
-└── MCPDemo.Integration.Tests/
-    └── PythonTools/
-        └── RunPythonCodeTests.cs           # NEW — end-to-end Docker integration tests
+├── contract/
+├── integration/
+└── unit/
+
+# [REMOVE IF UNUSED] Option 2: Web application (when "frontend" + "backend" detected)
+backend/
+├── src/
+│   ├── models/
+│   ├── services/
+│   └── api/
+└── tests/
+
+frontend/
+├── src/
+│   ├── components/
+│   ├── pages/
+│   └── services/
+└── tests/
+
+# [REMOVE IF UNUSED] Option 3: Mobile + API (when "iOS/Android" detected)
+api/
+└── [same as backend above]
+
+ios/ or android/
+└── [platform-specific structure: feature modules, UI flows, platform tests]
 ```
 
-**Structure Decision**: Extends the existing Clean Architecture layout. New files are added to existing projects — no new .csproj files needed. The `docker/python-sandbox/` directory is new at the repo root.
+**Structure Decision**: [Document the selected structure and reference the real
+directories captured above]
 
 ## Complexity Tracking
 
-No constitution violations. No complexity justifications needed.
+> **Fill ONLY if Constitution Check has violations that must be justified**
+
+| Violation | Why Needed | Simpler Alternative Rejected Because |
+|-----------|------------|-------------------------------------|
+| [e.g., 4th project] | [current need] | [why 3 projects insufficient] |
+| [e.g., Repository pattern] | [specific problem] | [why direct DB access insufficient] |

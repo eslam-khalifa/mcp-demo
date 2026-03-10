@@ -1,0 +1,69 @@
+﻿  Determining projects to restore...
+  All projects are up-to-date for restore.
+  MCPDemo.Shared -> D:\github_repos\mcp-demo\src\MCPDemo.Shared\bin\Debug\net8.0\MCPDemo.Shared.dll
+  MCPDemo.Domain -> D:\github_repos\mcp-demo\src\MCPDemo.Domain\bin\Debug\net8.0\MCPDemo.Domain.dll
+  MCPDemo.Application -> D:\github_repos\mcp-demo\src\MCPDemo.Application\bin\Debug\net8.0\MCPDemo.Application.dll
+  MCPDemo.Infrastructure -> D:\github_repos\mcp-demo\src\MCPDemo.Infrastructure\bin\Debug\net8.0\MCPDemo.Infrastructure.dll
+  MCPDemo.Api -> D:\github_repos\mcp-demo\src\MCPDemo.Api\bin\Debug\net8.0\MCPDemo.Api.dll
+  MCPDemo.Integration.Tests -> D:\github_repos\mcp-demo\tests\MCPDemo.Integration.Tests\bin\Debug\net8.0\MCPDemo.Integration.Tests.dll
+Test run for D:\github_repos\mcp-demo\tests\MCPDemo.Integration.Tests\bin\Debug\net8.0\MCPDemo.Integration.Tests.dll (.NETCoreApp,Version=v8.0)
+VSTest version 17.14.1 (x64)
+
+Starting test execution, please wait...
+A total of 1 test files matched the specified pattern.
+dotnet : [xUnit.net 
+00:00:05.75]     MCPDemo.Inte
+gration.Tests.Services.Produc
+tIntegrationTests.Integration
+_GetAllProducts_ReturnsRealDa
+ta [FAIL]
+At line:1 char:1
++ dotnet test tests/MCPDemo.I
+ntegration.Tests/ --filter 
+"Category=Integ ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~
+    + CategoryInfo           
+   : NotSpecified: ([xUnit.  
+  net 00:0...RealData [FAI   
+ L]:String) [], RemoteExc    
+eption
+    + FullyQualifiedErrorId  
+   : NativeCommandError
+ 
+  Failed MCPDemo.Integration.Tests.Services.ProductIntegrationTests.Integration_GetAllProducts_ReturnsRealData [1 s]
+  Error Message:
+   Expected products.Count() to be less than or equal to 5, but found 68 (difference of 63).
+  Stack Trace:
+     at FluentAssertions.Execution.LateBoundTestFramework.Throw(String message)
+   at FluentAssertions.Execution.DefaultAssertionStrategy.HandleFailure(String message)
+   at FluentAssertions.Execution.AssertionScope.AddPreFormattedFailure(String formattedFailureMessage)
+   at FluentAssertions.Execution.AssertionChain.FailWith(Func`1 getFailureReason)
+   at FluentAssertions.Execution.AssertionChain.FailWith(Func`1 getFailureReason)
+   at FluentAssertions.Execution.AssertionChain.FailWith(String message, Object[] args)
+   at FluentAssertions.Numeric.NumericAssertionsBase`3.BeLessThanOrEqualTo(T expected, String because, Object[] becauseArgs)
+   at MCPDemo.Integration.Tests.Services.ProductIntegrationTests.Integration_GetAllProducts_ReturnsRealData() in D:\github_repos\mcp-demo\tests\MCPDemo.Integration.Tests\Services\ProductIntegrationTests.cs:line 29
+--- End of stack trace from previous location ---
+[xUnit.net 00:00:07.66]     M
+CPDemo.Integration.Tests.Pyth
+onSandbox.PythonIntegrationTe
+sts.Integration_ExecuteWithDa
+ta_ReturnsProcessedJson 
+[FAIL]
+  Failed MCPDemo.Integration.Tests.PythonSandbox.PythonIntegrationTests.Integration_ExecuteWithData_ReturnsProcessedJson [2 s]
+  Error Message:
+   MCPDemo.Shared.Exceptions.PythonSandboxException : Python execution failed (Code 1): /app/main.py:13: DeprecationWarning: 
+Pyarrow will become a required dependency of pandas in the next major release of pandas (pandas 3.0),
+(to allow more performant data types, such as the Arrow string type, and better interoperability with other libraries)
+but was not found to be installed on your system.
+If this would cause problems for you,
+please provide us feedback at https://github.com/pandas-dev/pandas/issues/54466
+        
+  import pandas as pd
+  Stack Trace:
+     at MCPDemo.Infrastructure.PythonSandbox.PythonSandboxService.ExecuteAsync(String code, String jsonData) in D:\github_repos\mcp-demo\src\MCPDemo.Infrastructure\PythonSandbox\PythonSandboxService.cs:line 67
+   at MCPDemo.Integration.Tests.PythonSandbox.PythonIntegrationTests.Integration_ExecuteWithData_ReturnsProcessedJson() in D:\github_repos\mcp-demo\tests\MCPDemo.Integration.Tests\PythonSandbox\PythonIntegrationTests.cs:line 41
+--- End of stack trace from previous location ---
+
+Failed!  - Failed:     2, Passed:     3, Skipped:     0, Total:     5, Duration: 6 s - MCPDemo.Integration.Tests.dll (net8.0)

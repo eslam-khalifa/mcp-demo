@@ -127,7 +127,11 @@ public class PlatziStoreApiClient : IPlatziStoreApiClient
     {
         var url = "products";
         var queryParams = new List<string>();
-        if (offset.HasValue) queryParams.Add($"offset={offset}");
+        
+        // Platzi API requires both offset and limit for pagination to work correctly
+        var actualOffset = offset ?? (limit.HasValue ? 0 : null);
+        
+        if (actualOffset.HasValue) queryParams.Add($"offset={actualOffset}");
         if (limit.HasValue) queryParams.Add($"limit={limit}");
         if (queryParams.Any()) url += "?" + string.Join("&", queryParams);
 

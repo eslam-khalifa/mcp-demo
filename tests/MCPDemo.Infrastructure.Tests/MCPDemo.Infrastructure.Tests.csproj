@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\MCPDemo.Infrastructure\MCPDemo.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\MCPDemo.Application\MCPDemo.Application.csproj" />
     <ProjectReference Include="..\..\src\MCPDemo.Domain\MCPDemo.Domain.csproj" />
     <ProjectReference Include="..\..\src\MCPDemo.Shared\MCPDemo.Shared.csproj" />
   </ItemGroup>
