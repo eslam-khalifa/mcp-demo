@@ -22,11 +22,11 @@ public static class ProductTools
     /// <param name="limit">Optional maximum number of items to return.</param>
     /// <returns>A JSON array of products if successful; otherwise, an error message.</returns>
     [McpServerTool]
-    [Description("List all products from the store with optional pagination.")]
+    [Description("List all products from the store with optional pagination. Returns a JSON array (Product).")]
     public static async Task<string> get_all_products(
         IProductService productService,
-        [Description("The number of items to skip (optional)")] int? offset = null,
-        [Description("The maximum number of items to return (optional)")] int? limit = null)
+        [Description("The number of items to skip for pagination. Integer. Optional. Default is 0.")] int? offset = null,
+        [Description("The maximum number of items to return. Integer. Optional. Default is 10.")] int? limit = null)
     {
         var result = await productService.GetAllAsync(offset, limit);
         return result.IsSuccess 
@@ -41,10 +41,10 @@ public static class ProductTools
     /// <param name="id">The product ID.</param>
     /// <returns>A product JSON object if found; otherwise, an error message.</returns>
     [McpServerTool]
-    [Description("Get a single product by its unique numeric ID.")]
+    [Description("Get a single product by its unique numeric ID. Returns a JSON object (Product).")]
     public static async Task<string> get_product_by_id(
         IProductService productService,
-        [Description("The numeric ID of the product")] int id)
+        [Description("The unique numeric ID of the product. Integer. Required.")] int id)
     {
         var result = await productService.GetByIdAsync(id);
         return result.IsSuccess 
@@ -59,10 +59,10 @@ public static class ProductTools
     /// <param name="slug">The product slug.</param>
     /// <returns>A product JSON object if found; otherwise, an error message.</returns>
     [McpServerTool]
-    [Description("Get a single product by its unique URL-friendly slug.")]
+    [Description("Get a single product by its unique URL-friendly slug. Returns a JSON object (Product).")]
     public static async Task<string> get_product_by_slug(
         IProductService productService,
-        [Description("The URL-friendly slug of the product")] string slug)
+        [Description("The URL-friendly slug of the product. String. Required.")] string slug)
     {
         var result = await productService.GetBySlugAsync(slug);
         return result.IsSuccess 
@@ -81,14 +81,14 @@ public static class ProductTools
     /// <param name="images">Array of image URLs for the product.</param>
     /// <returns>The created product JSON object if successful; otherwise, an error message.</returns>
     [McpServerTool]
-    [Description("Create a new product in the store.")]
+    [Description("Create a new product in the store. Returns a JSON object (Product).")]
     public static async Task<string> create_product(
         IProductService productService,
-        [Description("The title of the product")] string title,
-        [Description("The price of the product")] decimal price,
-        [Description("The HTML or plain text description")] string description,
-        [Description("The ID of the category")] int categoryId,
-        [Description("The array of image URLs")] string[] images)
+        [Description("The title of the product. String. Required.")] string title,
+        [Description("The price of the product. Decimal. Required. Must be positive.")] decimal price,
+        [Description("The HTML or plain text description. String. Required.")] string description,
+        [Description("The ID of the category this product belongs to. Integer. Required.")] int categoryId,
+        [Description("An array of image URLs for the product. Array of Strings. Required. Must contain at least one URL.")] string[] images)
     {
         var dto = new CreateProductDto(title, price, description, categoryId, images.ToList());
 
@@ -110,15 +110,15 @@ public static class ProductTools
     /// <param name="images">Optional new array of image URLs.</param>
     /// <returns>The updated product JSON object if successful; otherwise, an error message.</returns>
     [McpServerTool]
-    [Description("Update an existing product. Only provide fields that need to be changed.")]
+    [Description("Update an existing product. Only provide fields that need to be changed. Returns a JSON object (Product).")]
     public static async Task<string> update_product(
         IProductService productService,
-        [Description("The numeric ID of the product to update")] int id,
-        [Description("The new title (optional)")] string? title = null,
-        [Description("The new price (optional)")] decimal? price = null,
-        [Description("The new description (optional)")] string? description = null,
-        [Description("The new category ID (optional)")] int? categoryId = null,
-        [Description("The new array of image URLs (optional)")] string[]? images = null)
+        [Description("The numeric ID of the product to update. Integer. Required.")] int id,
+        [Description("The new title. String. Optional.")] string? title = null,
+        [Description("The new price. Decimal. Optional. Must be positive.")] decimal? price = null,
+        [Description("The new description. String. Optional.")] string? description = null,
+        [Description("The new category ID. Integer. Optional.")] int? categoryId = null,
+        [Description("An array of new image URLs. Array of Strings. Optional.")] string[]? images = null)
     {
         var dto = new UpdateProductDto(title, price, description, categoryId, images?.ToList());
 
@@ -135,10 +135,10 @@ public static class ProductTools
     /// <param name="id">The numeric ID of the product to delete.</param>
     /// <returns>A success message if deleted; otherwise, an error message.</returns>
     [McpServerTool]
-    [Description("Delete a product by its unique numeric ID.")]
+    [Description("Delete a product by its unique numeric ID. Returns a plain text success message.")]
     public static async Task<string> delete_product(
         IProductService productService,
-        [Description("The numeric ID of the product to delete")] int id)
+        [Description("The unique numeric ID of the product to delete. Integer. Required.")] int id)
     {
         var result = await productService.DeleteAsync(id);
         return result.IsSuccess 
@@ -153,10 +153,10 @@ public static class ProductTools
     /// <param name="id">The primary product ID.</param>
     /// <returns>A JSON array of related products if successful; otherwise, an error message.</returns>
     [McpServerTool]
-    [Description("Get products related to a specific product by its numeric ID.")]
+    [Description("Get products related to a specific product by its numeric ID. Returns a JSON array (Product).")]
     public static async Task<string> get_related_products_by_id(
         IProductService productService,
-        [Description("The numeric ID of the reference product")] int id)
+        [Description("The numeric ID of the reference product. Integer. Required.")] int id)
     {
         var result = await productService.GetRelatedByIdAsync(id);
         return result.IsSuccess 
@@ -171,10 +171,10 @@ public static class ProductTools
     /// <param name="slug">The primary product slug.</param>
     /// <returns>A JSON array of related products if successful; otherwise, an error message.</returns>
     [McpServerTool]
-    [Description("Get products related to a specific product by its URL-friendly slug.")]
+    [Description("Get products related to a specific product by its URL-friendly slug. Returns a JSON array (Product).")]
     public static async Task<string> get_related_products_by_slug(
         IProductService productService,
-        [Description("The URL-friendly slug of the reference product")] string slug)
+        [Description("The URL-friendly slug of the reference product. String. Required.")] string slug)
     {
         var result = await productService.GetRelatedBySlugAsync(slug);
         return result.IsSuccess 

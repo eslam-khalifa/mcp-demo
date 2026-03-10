@@ -863,30 +863,30 @@ Example: `GetByIdAsync_ValidId_ReturnsProduct`
 
 | Phase | Step | Task | Layer | Est. Effort |
 |-------|------|------|-------|-------------|
-| **1** | 1 | Create solution + 5 project structure | All | 1h |
-| **1** | 2 | Add NuGet dependencies to all projects | All | 30m |
-| **1** | 3 | Define domain entities (`Product`, `Category`, `PriceRange`) | Domain | 30m |
-| **1** | 4 | Create shared models (`Result<T>`, `ErrorResponse`, constants) | Shared | 30m |
-| **1** | 5 | Create all service interfaces in Application | Application | 30m |
-| **2** | 6 | Implement `PlatziStoreApiClient` with retry logic | Infrastructure | 2h |
-| **2** | 7 | Implement `ProductService` | Application | 1.5h |
-| **2** | 8 | Implement `CategoryService` | Application | 1h |
-| **2** | 9 | Implement `SearchService` (filter/pagination) | Application | 1h |
-| **2** | 10 | Configure Serilog + implement `InMemoryMetricsCollector` | Infrastructure | 1h |
-| **3** | 11 | Bootstrap MCP server (`Program.cs` with stdio) | Api | 1h |
-| **3** | 12 | Implement Product MCP tools (`ProductTools.cs`) | Api | 1.5h |
-| **3** | 13 | Implement Category MCP tools (`CategoryTools.cs`) | Api | 1h |
-| **3** | 14 | Implement Search MCP tool (`SearchTools.cs`) | Api | 1h |
-| **4** | 15 | Create Python sandbox Dockerfile + `main.py` (general-purpose code executor) | Docker | 1h |
-| **4** | 16 | Define `IPythonSandboxService` interface in Application layer | Application | 30m |
-| **4** | 17 | Implement `PythonSandboxService` (Docker CLI runner) | Infrastructure | 1.5h |
-| **4** | 18 | Implement `run_python_code` MCP tool (`PythonTools.cs`) | Api | 1h |
-| **4** | 19 | Register `IPythonSandboxService` in `Program.cs` + build verification | Api | 30m |
-| **5** | 20 | Write unit tests for Application services | Tests | 3h |
-| **5** | 21 | Write unit tests for Infrastructure (API client, sandbox) | Tests | 2h |
-| **5** | 22 | Write integration tests (MCP tool end-to-end) | Tests | 2h |
-| **6** | 23 | Add `get_metrics` MCP tool | Api | 30m |
-| **6** | 24 | Final code review, cleanup, documentation | All | 1h |
+| **1** | 1 | Create solution + 5 project structure | All | ✅ |
+| **1** | 2 | Add NuGet dependencies to all projects | All | ✅ |
+| **1** | 3 | Define domain entities (`Product`, `Category`, `PriceRange`) | Domain | ✅ |
+| **1** | 4 | Create shared models (`Result<T>`, `ErrorResponse`, constants) | Shared | ✅ |
+| **1** | 5 | Create all service interfaces in Application | Application | ✅ |
+| **2** | 6 | Implement `PlatziStoreApiClient` with retry logic | Infrastructure | ✅ |
+| **2** | 7 | Implement `ProductService` | Application | ✅ |
+| **2** | 8 | Implement `CategoryService` | Application | ✅ |
+| **2** | 9 | Implement `SearchService` (filter/pagination) | Application | ✅ |
+| **2** | 10 | Configure Serilog + implement `InMemoryMetricsCollector` | Infrastructure | ✅ |
+| **3** | 11 | Bootstrap MCP server (`Program.cs` with stdio) | Api | ✅ |
+| **3** | 12 | Implement Product MCP tools (`ProductTools.cs`) | Api | ✅ |
+| **3** | 13 | Implement Category MCP tools (`CategoryTools.cs`) | Api | ✅ |
+| **3** | 14 | Implement Search MCP tool (`SearchTools.cs`) | Api | ✅ |
+| **4** | 15 | Create Python sandbox Dockerfile + `main.py` (general-purpose code executor) | Docker | ✅ |
+| **4** | 16 | Define `IPythonSandboxService` interface in Application layer | Application | ✅ |
+| **4** | 17 | Implement `PythonSandboxService` (Docker CLI runner) | Infrastructure | ✅ |
+| **4** | 18 | Implement `run_python_code` MCP tool (`PythonTools.cs`) | Api | ✅ |
+| **4** | 19 | Register `IPythonSandboxService` in `Program.cs` + build verification | Api | ✅ |
+| **5** | 20 | Write unit tests for Application services | Tests | ✅ |
+| **5** | 21 | Write unit tests for Infrastructure (API client, sandbox) | Tests | ✅ |
+| **5** | 22 | Write integration tests (MCP tool end-to-end) | Tests | ✅ |
+| **6** | 23 | Add `get_metrics` MCP tool | Api | ✅ |
+| **6** | 24 | Final code review, cleanup, documentation | All | ✅ |
 
 ### Phase Summary
 
@@ -940,6 +940,6 @@ Example: `GetByIdAsync_ValidId_ReturnsProduct`
 | IV. Clean Architecture (4 layers + Shared) | ✅ Strict dependency direction, MCP tools in Application layer |
 | V. Security & Sandboxing (Docker, validation) | ✅ Docker with no-network, read-only, no-new-privileges, input validation |
 | Technology Stack (.NET 8, C#, Serilog) | ✅ All technologies as specified |
-| Spec-Kit Conventions (per-tool spec files) | ⏳ To be created per tool during implementation |
+| Spec-Kit Conventions (per-tool spec files) | ✅ All phases complete |
 | No caching | ✅ No cache layer included |
 | No EF Core / database | ✅ No database, all data from external API |

@@ -28,17 +28,17 @@ public static class SearchTools
     /// <param name="limit">Optional pagination limit.</param>
     /// <returns>A JSON array of products if successful; otherwise, an error message.</returns>
     [McpServerTool]
-    [Description("Search products with flexible filters (title, price, category, etc.).")]
+    [Description("Search products with flexible filters (title, price, category, etc.). Returns a JSON array (Product).")]
     public static async Task<string> search_products(
         ISearchService searchService,
-        [Description("The title to search for (optional)")] string? title = null,
-        [Description("The exact price to filter by (optional)")] decimal? price = null,
-        [Description("The minimum price (optional)")] decimal? priceMin = null,
-        [Description("The maximum price (optional)")] decimal? priceMax = null,
-        [Description("The numeric category ID (optional)")] int? categoryId = null,
-        [Description("The URL-friendly category slug (optional)")] string? categorySlug = null,
-        [Description("The number of items to skip (optional)")] int? offset = null,
-        [Description("The maximum number of items to return (optional)")] int? limit = null)
+        [Description("The product title to search for. String. Optional.")] string? title = null,
+        [Description("Filter by exact price. Decimal. Optional.")] decimal? price = null,
+        [Description("Filter by minimum price. Decimal. Optional.")] decimal? priceMin = null,
+        [Description("Filter by maximum price. Decimal. Optional.")] decimal? priceMax = null,
+        [Description("Filter by numeric category ID. Integer. Optional.")] int? categoryId = null,
+        [Description("Filter by URL-friendly category slug. String. Optional.")] string? categorySlug = null,
+        [Description("The number of items to skip for pagination. Integer. Optional. Default is 0.")] int? offset = null,
+        [Description("The maximum number of items to return for pagination. Integer. Optional. Default is 10.")] int? limit = null)
     {
         var dto = new SearchProductsDto(
             Title: title,

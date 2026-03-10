@@ -27,29 +27,28 @@ public static class PythonTools
     /// <param name="data">Optional JSON data payload.</param>
     /// <returns>The captured stdout or an error message.</returns>
     [McpServerTool]
-    [Description("Execute arbitrary Python code in a secure Docker sandbox to perform custom data analysis on store data. " +
-                 "The code receives data via a pre-parsed 'data' variable and outputs results via print(). " +
+    [Description("Execute arbitrary Python code in a secure Docker sandbox for advanced data analysis. Returns the captured stdout (String). " +
                  "Libraries available: json, pandas (as pd), numpy (as np).")]
     public static async Task<string> run_python_code(
         IPythonSandboxService sandboxService,
         ILogger<PythonSandboxService> logger, // Re-use service logger for consistency
         IMetricsCollector metrics,
-        [Description("The Python source code to execute. Must not be empty. The code can reference 'data', 'json', 'pd', and 'np'. Use print() for output.")] 
+        [Description("The Python source code to execute. String. Required. Available: pandas (pd), numpy (np), json. Access data via 'data' variable. Use print() for output.")] 
         string code,
-        [Description("Optional JSON string data payload for the script. Available as the 'data' variable in Python.")] 
+        [Description("Optional JSON data payload provided to the script as 'data' variable. JSON String. Optional.")] 
         string? data = null)
     {
         const string toolName = "run_python_code";
         var sw = Stopwatch.StartNew();
 
-        // T021: Validate code is not empty
+        // Validate code is not empty
         if (string.IsNullOrWhiteSpace(code))
         {
             metrics.RecordExecution(toolName, 0, false, "ValidationError");
             return "Error: Python code cannot be empty.";
         }
 
-        // T022: Validate data is valid JSON if provided
+        // Validate data is valid JSON if provided
         if (data != null)
         {
             try
