@@ -5,6 +5,7 @@ using MCPDemo.Application.Services;
 using MCPDemo.Infrastructure.ExternalApi;
 using MCPDemo.Infrastructure.Logging;
 using MCPDemo.Infrastructure.Metrics;
+using MCPDemo.Infrastructure.PythonSandbox;
 using ModelContextProtocol;
 using Serilog;
 
@@ -28,6 +29,8 @@ builder.Services.AddHttpClient<IPlatziStoreApiClient, PlatziStoreApiClient>(clie
 });
 
 builder.Services.AddSingleton<IMetricsCollector, InMemoryMetricsCollector>();
+builder.Services.AddScoped<IPythonSandboxService, PythonSandboxService>();
+builder.Services.AddScoped<IDockerProcessRunner, DockerProcessRunner>();
 
 // 4. Register and configure the MCP Server
 // Automatically discovers tool methods decorated with [McpServerTool]

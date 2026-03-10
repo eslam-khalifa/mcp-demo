@@ -159,6 +159,11 @@ Python sandbox constraints (enforced by Docker):
 
 - This constitution **supersedes** all other project-level practices and
   conventions. In case of conflict, this document is authoritative.
+- **Phased implementation review**: During implementation (`/speckit.implement`),
+  the AI MUST NOT proceed to the next phase until the user has explicitly
+  reviewed and approved the current phase. After completing each phase, the AI
+  MUST stop, report what was done, and wait for the user's confirmation before
+  continuing.
 - **Amendment procedure**:
   1. Propose changes in a pull request with a clear rationale.
   2. Changes MUST be reviewed and approved by the project author before
@@ -172,4 +177,4 @@ Python sandbox constraints (enforced by Docker):
   guidance and to ensure all artifacts remain consistent with this
   constitution.
 
-**Version**: 1.0.0 | **Ratified**: 2026-03-09 | **Last Amended**: 2026-03-09
+**Version**: 1.1.0 | **Ratified**: 2026-03-09 | **Last Amended**: 2026-03-10

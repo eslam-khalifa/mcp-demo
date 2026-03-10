@@ -34,13 +34,13 @@ tools for interacting with the
 [Platzi Fake Store API](https://api.escuelajs.co/api/v1/).
 The MCP server connects to **Cursor IDE** via **stdio** transport, enabling
 an AI assistant to browse, search, create, update, and delete products and
-categories, as well as run advanced Python-based analytics in a Docker sandbox.
+categories, as well as run advanced Python-based data analysis in a Docker sandbox.
 
 ### Goals
 
 - Expose every available Platzi Fake Store API operation as an MCP tool.
 - Follow Clean Architecture with strict layer separation.
-- Provide Python sandbox analytics for computations the API cannot do natively.
+- Provide Python sandbox data analysis for computations the API cannot do natively.
 - Log every tool execution with Serilog (structured JSON to file).
 - Collect runtime metrics (call counts, execution times, errors).
 - Be modular, testable, and production-ready.
@@ -48,7 +48,7 @@ categories, as well as run advanced Python-based analytics in a Docker sandbox.
 ### Scope
 
 - **In scope:** Products CRUD, Categories CRUD, filtering, pagination,
-  related products, Python analytics, logging, metrics.
+  related products, Python data analysis, logging, metrics.
 - **Out of scope (for now):** Users, Authentication, EF Core / database,
   response caching, frontend.
 
@@ -82,7 +82,7 @@ MCPDemo/
 │   │   │   ├── ProductTools.cs         # Product MCP tool methods
 │   │   │   ├── CategoryTools.cs        # Category MCP tool methods
 │   │   │   ├── SearchTools.cs          # Search & filter MCP tool methods
-│   │   │   └── AnalyticsTools.cs       # Python analytics MCP tool methods
+│   │   │   └── PythonTools.cs          # General-purpose Python sandbox MCP tool
 │   │   └── Middleware/                 # Cross-cutting (error handler, logging)
 │   │
 │   ├── MCPDemo.Application/            # Application Layer
@@ -90,13 +90,11 @@ MCPDemo/
 │   │   │   ├── IProductService.cs
 │   │   │   ├── ICategoryService.cs
 │   │   │   ├── ISearchService.cs
-│   │   │   ├── IAnalyticsService.cs
 │   │   │   └── IPythonSandboxService.cs
 │   │   ├── Services/                   # Service implementations
 │   │   │   ├── ProductService.cs
 │   │   │   ├── CategoryService.cs
-│   │   │   ├── SearchService.cs
-│   │   │   └── AnalyticsService.cs
+│   │   │   └── SearchService.cs
 │   │   └── DTOs/                       # Request/Response DTOs
 │   │       ├── Products/
 │   │       └── Categories/
@@ -146,11 +144,7 @@ MCPDemo/
 │   └── python-sandbox/
 │       ├── Dockerfile
 │       ├── requirements.txt
-│       ├── main.py                     # Entry point for Python analytics
-│       └── tools/                      # Individual Python tool scripts
-│           ├── average_price.py
-│           ├── price_statistics.py
-│           └── category_report.py
+│       └── main.py                     # Executes AI-generated Python code
 │
 ├── logs/                               # Serilog output directory
 ├── MCPDemo.sln
@@ -383,14 +377,30 @@ Every tool below becomes an MCP tool method exposed via the stdio server.
 > filter parameters is more flexible than many small filter tools. The AI
 > can combine any filters naturally in a single call.
 
-### 6.4 Python Analytics Tools
+### 6.4 Python Sandbox Tool
 
 | Tool Name | Category | Description | Inputs | Outputs |
 |-----------|----------|-------------|--------|---------|
-| `analyze_price_statistics` | Reporting | Compute min, max, mean, median, std dev of prices | `categoryId?` (optional filter) | `{ min, max, mean, median, stdDev, count }` |
-| `get_top_expensive_products` | Reporting | Get top N most expensive products and their average price | `n` (int), `categoryId?` | `{ products[], averagePrice }` |
-| `get_category_price_report` | Reporting | Price summary (avg, min, max, count) per category | — | `{ categoryReports[] }` |
-| `get_price_distribution` | Reporting | Price distribution (histogram buckets) | `bucketCount?` (default: 10) | `{ buckets[] }` |
+| `run_python_code` | Data Analysis | Execute arbitrary Python code in a secure Docker sandbox to perform custom data analysis on store data | `code` (string — Python source), `data` (string — JSON payload for the script) | `string` (stdout from the Python script) |
+
+> **Design decision:** A single general-purpose `run_python_code` tool replaces
+> the previous 4 hardcoded data analysis tools. The AI assistant writes custom
+> Python code at runtime to answer any analytical question (e.g., "top 5 most
+> expensive laptops and their average price", "price variance per category",
+> "percentage of products under $50"). This is far more flexible than
+> pre-defined scripts and leverages the AI's ability to generate code.
+>
+> **Safety:** The Docker sandbox runs with `--network=none`, `--read-only`,
+> `--memory=256m`, `--cpus=0.5`, `--security-opt=no-new-privileges`, and a
+> 30-second timeout. The Python environment has `pandas` and `numpy` available
+> but cannot access the network or filesystem.
+>
+> **Typical workflow:**
+> 1. AI calls `search_products` or `get_all_products` to fetch data.
+> 2. AI writes Python code to analyze the fetched data.
+> 3. AI calls `run_python_code(code=<script>, data=<fetched JSON>)`.
+> 4. Python script receives JSON via stdin, processes it, prints result to stdout.
+> 5. Tool returns stdout as the result string.
 
 ---
 
@@ -409,7 +419,6 @@ var builder = Host.CreateApplicationBuilder(args);
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<ISearchService, SearchService>();
-builder.Services.AddScoped<IAnalyticsService, AnalyticsService>();
 
 // Register infrastructure
 builder.Services.AddHttpClient<IPlatziStoreApiClient, PlatziStoreApiClient>(client =>
@@ -503,15 +512,17 @@ public static class ProductTools
 8. Serilog logs the execution.
 9. Result returned to Cursor via stdout.
 
-### Execution Steps (Python Tool)
+### Execution Steps (Python Tool — `run_python_code`)
 
-1. Steps 1–3 same as above.
-2. Service fetches required data from Platzi API.
-3. Service serializes data to JSON and calls `PythonSandboxService`.
-4. `PythonSandboxService` runs `docker run` with JSON piped to stdin.
-5. Python script processes data and writes JSON to stdout.
-6. Service deserializes Python output and returns result.
-7. Metrics + logging as above.
+1. AI assistant first fetches data using C# tools (e.g., `search_products`).
+2. AI writes Python code to analyze the fetched data.
+3. AI calls `run_python_code(code=<script>, data=<JSON>)`.
+4. MCP tool validates inputs (code not empty) and calls `IPythonSandboxService`.
+5. `PythonSandboxService` pipes `{"code": "...", "data": "..."}` to Docker stdin.
+6. `main.py` receives the payload, executes the code via `exec()` in a restricted namespace with `pandas`, `numpy`, and `json` available.
+7. Python script reads data from the `data` variable (pre-parsed JSON), processes it, and prints output to stdout.
+8. `PythonSandboxService` captures stdout and returns it.
+9. Metrics + logging as above.
 
 ---
 
@@ -543,43 +554,93 @@ numpy==1.26.3
 > They do NOT make network calls. This satisfies the constitution's
 > "no network access outside MCP backend API" rule.
 
-### `main.py` — Entry Point
+### `main.py` — General-Purpose Code Executor
 
 ```python
 import sys
 import json
 
 def main():
-    input_data = json.loads(sys.stdin.read())
-    tool_name = input_data.get("tool")
-    payload = input_data.get("data")
+    """Execute AI-generated Python code in a sandboxed environment.
 
-    if tool_name == "price_statistics":
-        from tools.price_statistics import run
-    elif tool_name == "top_expensive":
-        from tools.average_price import run
-    elif tool_name == "category_report":
-        from tools.category_report import run
-    elif tool_name == "price_distribution":
-        from tools.price_distribution import run
-    else:
-        print(json.dumps({"error": f"Unknown tool: {tool_name}"}))
+    Expects JSON on stdin: {"code": "<python source>", "data": "<json string>"}
+    The code can use: json, pandas (as pd), numpy (as np).
+    The variable `data` is pre-populated with the parsed JSON payload.
+    All output must be printed to stdout.
+    """
+    try:
+        import pandas as pd
+        import numpy as np
+
+        raw = sys.stdin.read()
+        input_payload = json.loads(raw)
+
+        code = input_payload.get("code", "")
+        data_str = input_payload.get("data", "null")
+
+        if not code:
+            print(json.dumps({"error": "No code provided"}))
+            sys.exit(1)
+
+        # Parse the data payload so the AI code can use it directly
+        data = json.loads(data_str) if data_str else None
+
+        # Restricted namespace — only safe builtins + data analysis libraries
+        exec_globals = {
+            "__builtins__": {
+                "print": print, "len": len, "range": range, "enumerate": enumerate,
+                "zip": zip, "map": map, "filter": filter, "sorted": sorted,
+                "min": min, "max": max, "sum": sum, "abs": abs, "round": round,
+                "int": int, "float": float, "str": str, "bool": bool,
+                "list": list, "dict": dict, "tuple": tuple, "set": set,
+                "isinstance": isinstance, "type": type,
+                "True": True, "False": False, "None": None,
+            },
+            "json": json,
+            "pd": pd,
+            "np": np,
+            "data": data,
+        }
+
+        exec(code, exec_globals)
+
+    except Exception as e:
+        print(json.dumps({"error": str(e)}))
         sys.exit(1)
-
-    result = run(payload)
-    print(json.dumps(result))
 
 if __name__ == "__main__":
     main()
 ```
+
+> **How it works:** The AI writes Python code that references the `data`
+> variable (pre-parsed JSON from the MCP tool input). The code uses `print()`
+> to output results. `pandas` is available as `pd` and `numpy` as `np`.
+>
+> **Example:** AI wants top 5 most expensive laptops and their average price:
+> ```python
+> import json
+> products = sorted(data, key=lambda p: p["price"], reverse=True)[:5]
+> avg = sum(p["price"] for p in products) / len(products)
+> print(json.dumps({"top_5": products, "average_price": avg}))
+> ```
 
 ### Docker Invocation from C#
 
 ```csharp
 public class PythonSandboxService : IPythonSandboxService
 {
-    public async Task<string> ExecuteAsync(string toolName, string jsonInput)
+    private readonly ILogger<PythonSandboxService> _logger;
+
+    public PythonSandboxService(ILogger<PythonSandboxService> logger)
     {
+        _logger = logger;
+    }
+
+    public async Task<string> ExecuteAsync(string code, string jsonData)
+    {
+        // Build the JSON payload: {"code": "...", "data": "..."}
+        var payload = JsonSerializer.Serialize(new { code, data = jsonData });
+
         var psi = new ProcessStartInfo
         {
             FileName = "docker",
@@ -594,9 +655,11 @@ public class PythonSandboxService : IPythonSandboxService
             CreateNoWindow = true
         };
 
+        _logger.LogInformation("Starting Python sandbox execution");
+
         using var process = Process.Start(psi);
-        // Write JSON input to stdin
-        await process.StandardInput.WriteAsync(jsonInput);
+        // Write JSON payload to stdin
+        await process!.StandardInput.WriteAsync(payload);
         process.StandardInput.Close();
 
         // Apply 30-second timeout
@@ -608,8 +671,9 @@ public class PythonSandboxService : IPythonSandboxService
         if (process.ExitCode != 0)
         {
             var error = await process.StandardError.ReadToEndAsync();
+            _logger.LogError("Python sandbox failed: {Error}", error);
             throw new PythonSandboxException(
-                $"Python tool '{toolName}' failed: {error}");
+                $"Python code execution failed: {error}");
         }
 
         return output;
@@ -754,7 +818,6 @@ public class ErrorResponse
 
 - Test each service method in isolation.
 - Mock `IPlatziStoreApiClient` with NSubstitute.
-- Mock `IPythonSandboxService` for analytics tests.
 - Verify input validation (invalid ID, empty title, negative price, etc.).
 - Verify correct mapping from API models to domain entities.
 
@@ -762,8 +825,8 @@ public class ErrorResponse
 
 - Test `PlatziStoreApiClient` with mocked `HttpMessageHandler`.
 - Test retry logic (simulate 500 → 500 → 200).
-- Test `PythonSandboxService` with mocked `Process` (verify arguments,
-  timeout handling).
+- Test `PythonSandboxService` with mocked `Process` (verify Docker arguments,
+  payload serialization, timeout handling, error propagation).
 - Test `InMemoryMetricsCollector` thread safety and accuracy.
 
 #### Integration Tests (`MCPDemo.Integration.Tests`)
@@ -771,7 +834,8 @@ public class ErrorResponse
 - Test full MCP tool flow with actual Platzi API (network-dependent,
   marked with `[Trait("Category", "Integration")]`).
 - Verify JSON serialization round-trip.
-- Verify Docker sandbox with a simple Python script (requires Docker).
+- Test `run_python_code` end-to-end: pass code + JSON data, verify output (requires Docker).
+- Test sandbox security: verify code cannot access network or filesystem.
 
 ### Naming Convention
 
@@ -813,11 +877,11 @@ Example: `GetByIdAsync_ValidId_ReturnsProduct`
 | **3** | 12 | Implement Product MCP tools (`ProductTools.cs`) | Api | 1.5h |
 | **3** | 13 | Implement Category MCP tools (`CategoryTools.cs`) | Api | 1h |
 | **3** | 14 | Implement Search MCP tool (`SearchTools.cs`) | Api | 1h |
-| **4** | 15 | Create Python sandbox Dockerfile + `main.py` | Docker | 1h |
-| **4** | 16 | Implement Python analytics scripts | Docker | 2h |
+| **4** | 15 | Create Python sandbox Dockerfile + `main.py` (general-purpose code executor) | Docker | 1h |
+| **4** | 16 | Define `IPythonSandboxService` interface in Application layer | Application | 30m |
 | **4** | 17 | Implement `PythonSandboxService` (Docker CLI runner) | Infrastructure | 1.5h |
-| **4** | 18 | Implement `AnalyticsService` | Application | 1h |
-| **4** | 19 | Implement Analytics MCP tools (`AnalyticsTools.cs`) | Api | 1h |
+| **4** | 18 | Implement `run_python_code` MCP tool (`PythonTools.cs`) | Api | 1h |
+| **4** | 19 | Register `IPythonSandboxService` in `Program.cs` + build verification | Api | 30m |
 | **5** | 20 | Write unit tests for Application services | Tests | 3h |
 | **5** | 21 | Write unit tests for Infrastructure (API client, sandbox) | Tests | 2h |
 | **5** | 22 | Write integration tests (MCP tool end-to-end) | Tests | 2h |
@@ -831,7 +895,7 @@ Example: `GetByIdAsync_ValidId_ReturnsProduct`
 | 1 | Foundation & Setup | ~3h |
 | 2 | Core Services & Infrastructure | ~6.5h |
 | 3 | MCP Server & C# Tools | ~4.5h |
-| 4 | Python Sandbox & Analytics | ~5.5h |
+| 4 | Python Sandbox & `run_python_code` | ~4.5h |
 | 5 | Testing | ~7h |
 | 6 | Polish & Metrics | ~1.5h |
 | | **Total** | **~28h** |
